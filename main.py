@@ -10,14 +10,17 @@ from time import sleep
 # ------------------ [SETTINGS] ------------------ #
 
 # Début/Fin
-START = "FF-123-ZX"
-END   = "FF-124-AB"
+START = "FF-123-AA"
+END   = "FF-124-AA"
 
 # Sauvegarder les résultats dans logs.txt
-SAVE = True
+SAVE = False
 
 # Cacher la fenêtre
 HIDE = True
+
+# Faire des statistiques après le scan
+STATS = True
 
 # ------------------------------------------------ #
 
@@ -97,6 +100,8 @@ def nextPlate(p):
 
 
 if __name__ == "__main__":
+    print("[SIV Scanner By Razen]\n----------------------------------------\n")
+
     options = webdriver.ChromeOptions()
 
     if HIDE:
@@ -107,20 +112,48 @@ if __name__ == "__main__":
     driver = webdriver.Chrome("chromedriver", options=options)
     openAndAcceptCookies(driver)
 
+    logs = []
     plate = START
 
     while plate != nextPlate(END):
         infos = searchPlate(driver, plate)
 
         if infos != -1:
-            log = f"[{plate}] Plaque trouvée : {infos}"
+            log = f"[{plate}] Plaque attribuée : {infos}"
         else:
             log = f"[{plate}] Plaque non attribuée"
 
-        if SAVE:
-            with open_encoding("logs.txt", "a+", "utf-8") as f:
-                f.write(log + "\n")
+        logs.append(log)
+        print(log)
 
         plate = nextPlate(plate)
 
-        print(log)
+    if SAVE:
+        with open_encoding("logs.txt", "w", "utf-8") as save:
+            for log in logs:
+                save.write(log + "\n")
+
+    if STATS:
+        print("\n[Statistiques]\n----------------------------------------\n")
+
+        stats = dict()
+        count = 0
+
+        for log in logs:
+            splitted = log.split()
+
+            if splitted[2] != "non":
+                marque = splitted[4]
+                count += 1
+
+                if marque not in stats:
+                    stats[marque] = 1
+                else:
+                    stats[marque] = stats[marque] + 1
+
+        sorted_stats = dict(reversed(sorted(stats.items(), key=lambda item: item[1])))
+
+        for k, v in sorted_stats.items():
+            print(f"\u2022  {round((v / count) * 100, 2)} %  {k} ({v})")
+
+        print(f"\nTotal : {count} véhicules identifiés")
