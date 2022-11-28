@@ -22,8 +22,7 @@ TIMEOUT = 10
 def openAndAcceptCookies(d):
     d.get(URL)
     d.maximize_window()
-    WebDriverWait(d, TIMEOUT).until(
-        EC.presence_of_element_located((By.ID, "acb-accept-all-button"))).click()
+    WebDriverWait(d, TIMEOUT).until(EC.presence_of_element_located((By.ID, "acb-accept-all-button"))).click()
     sleep(1)
 
 
