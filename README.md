@@ -7,3 +7,4 @@ Les paramètres suivants sont modifiables en haut du script :
 - END : Plaque de fin
 - SAVE : Sauvegarder les logs dans ./logs.txt
 - HIDE : Cacher la fenêtre de Chrome
+- STATS : Faire de statistiques après le scan
