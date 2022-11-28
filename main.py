@@ -7,7 +7,7 @@ from string import ascii_uppercase as alpha
 from codecs import open as open_encoding
 from time import sleep
 
-# ----------------------------------------------- #
+# ------------------ [SETTINGS] ------------------ #
 
 # Début/Fin
 START = "FF-123-ZX"
@@ -19,7 +19,7 @@ SAVE = True
 # Cacher la fenêtre
 HIDE = True
 
-# ----------------------------------------------- #
+# ------------------------------------------------ #
 
 URL = "https://www.piecesautosaintlaurent.com/categories-pieces"
 TIMEOUT = 10
