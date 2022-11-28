@@ -7,7 +7,7 @@ from string import ascii_uppercase as alpha
 from codecs import open as open_encoding
 from time import sleep
 
-# ------------------- #
+# ----------------------------------------------- #
 
 # Début/Fin
 START = "FF-123-ZX"
@@ -19,7 +19,7 @@ SAVE = True
 # Cacher la fenêtre
 HIDE = True
 
-# ------------------- #
+# ----------------------------------------------- #
 
 URL = "https://www.piecesautosaintlaurent.com/categories-pieces"
 TIMEOUT = 10
@@ -71,7 +71,7 @@ def nextNumber(n):
 
     if n == 9:
         return str(1)
-    
+
     return str(n + 1)
 
 
