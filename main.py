@@ -9,8 +9,8 @@ from codecs import open as open_encoding
 
 # ------------------- #
 
-START  = "AA-001-AA"
-END    = "FF-999-ZZ"
+START = "AA-001-AA"
+END = "FF-999-ZZ"
 SAVE = True
 
 # ------------------- #
@@ -51,26 +51,33 @@ def searchPlate(d, p):
     return -1
 
 
-driver = webdriver.Chrome()
-openAndAcceptCookies(driver)
+if __name__ == "__main__":
+    options = webdriver.ChromeOptions()
 
-for l1 in alpha[alpha.index(START[0]):alpha.index(END[0])]:
-    for l2 in alpha[alpha.index(START[1]):alpha.index(END[1])]:
-        for x in range(int(START[3]), int(END[3])):
-            for y in range(int(START[4]), int(END[4])):
-                for z in range(int(START[5]), int(END[5])):
-                    for l3 in alpha[alpha.index(START[7]):alpha.index(END[7])]:
-                        for l4 in alpha[alpha.index(START[8]):alpha.index(END[8])]:
-                            plate = f"{l1}{l2}-{x}{y}{z}-{l3}{l4}"
-                            infos = searchPlate(driver, plate)
+    options.add_argument("headless")
+    options.add_argument("window-size=1920x1080")
+    options.add_argument("disable-gpu")
 
-                            if infos != -1:
-                                log = f"[{plate}] Plaque trouvée : {infos}"
-                            else:
-                                log = f"[{plate}] Plaque non attribuée"
+    driver = webdriver.Chrome("chromedriver", options=options)
+    openAndAcceptCookies(driver)
 
-                            if SAVE:
-                                with open_encoding("logs.txt", "a+", "utf-8") as f:
-                                    f.write(log + "\n")
+    for l1 in alpha[alpha.index(START[0]):alpha.index(END[0])]:
+        for l2 in alpha[alpha.index(START[1]):alpha.index(END[1])]:
+            for x in range(int(START[3]), int(END[3])):
+                for y in range(int(START[4]), int(END[4])):
+                    for z in range(int(START[5]), int(END[5])):
+                        for l3 in alpha[alpha.index(START[7]):alpha.index(END[7])]:
+                            for l4 in alpha[alpha.index(START[8]):alpha.index(END[8])]:
+                                plate = f"{l1}{l2}-{x}{y}{z}-{l3}{l4}"
+                                infos = searchPlate(driver, plate)
 
-                            print(log)
+                                if infos != -1:
+                                    log = f"[{plate}] Plaque trouvée : {infos}"
+                                else:
+                                    log = f"[{plate}] Plaque non attribuée"
+
+                                if SAVE:
+                                    with open_encoding("logs.txt", "a+", "utf-8") as f:
+                                        f.write(log + "\n")
+
+                                print(log)
