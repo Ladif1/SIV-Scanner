@@ -1,17 +1,23 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from string import ascii_uppercase as alpha
 from codecs import open as open_encoding
 from time import sleep
 
 # ------------------- #
 
-START = "AA-001-AA"
-END = "FF-999-ZZ"
+# Début/Fin
+START = "FF-123-ZX"
+END   = "FF-124-AB"
+
+# Sauvegarder les résultats dans logs.txt
 SAVE = True
+
+# Cacher la fenêtre
+HIDE = True
 
 # ------------------- #
 
@@ -51,33 +57,70 @@ def searchPlate(d, p):
     return -1
 
 
+def nextLetter(l):
+    index = alpha.index(l)
+
+    if index == 26:
+        return alpha[1]
+
+    return alpha[index + 1]
+
+
+def nextNumber(n):
+    n = int(n)
+
+    if n == 9:
+        return str(1)
+    
+    return str(n + 1)
+
+
+def nextPlate(p):
+    p = list(p)
+
+    if p[8] != 'Z':
+        p[8] = nextLetter(p[8])
+    elif p[7] != 'Z':
+        p[7], p[8] = nextLetter(p[7]), 'A'
+    elif p[5] != '9':
+        p[5], p[7], p[8] = nextNumber(p[5]), 'A', 'A'
+    elif p[4] != '9':
+        p[4], p[5], p[7], p[8] = nextNumber(p[4]), '0', 'A', 'A'
+    elif p[3] != '9':
+        p[3], p[4], p[5], p[7], p[8] = nextNumber(p[3]), '0', '0', 'A', 'A'
+    elif p[1] != 'Z':
+        p[1], p[3], p[4], p[5], p[7], p[8] = nextLetter(p[1]), '0', '0', '0', 'A', 'A'
+    elif p[0] != 'Z':
+        p[0], p[1], p[3], p[4], p[5], p[7], p[8] = nextLetter(p[0]), 'A', '0', '0', '0', 'A', 'A'
+
+    return "".join(p)
+
+
 if __name__ == "__main__":
     options = webdriver.ChromeOptions()
 
-    options.add_argument("headless")
-    options.add_argument("window-size=1920x1080")
-    options.add_argument("disable-gpu")
+    if HIDE:
+        options.add_argument("headless")
+        options.add_argument("window-size=1920x1080")
+        options.add_argument("disable-gpu")
 
     driver = webdriver.Chrome("chromedriver", options=options)
     openAndAcceptCookies(driver)
 
-    for l1 in alpha[alpha.index(START[0]):alpha.index(END[0])]:
-        for l2 in alpha[alpha.index(START[1]):alpha.index(END[1])]:
-            for x in range(int(START[3]), int(END[3])):
-                for y in range(int(START[4]), int(END[4])):
-                    for z in range(int(START[5]), int(END[5])):
-                        for l3 in alpha[alpha.index(START[7]):alpha.index(END[7])]:
-                            for l4 in alpha[alpha.index(START[8]):alpha.index(END[8])]:
-                                plate = f"{l1}{l2}-{x}{y}{z}-{l3}{l4}"
-                                infos = searchPlate(driver, plate)
+    plate = START
 
-                                if infos != -1:
-                                    log = f"[{plate}] Plaque trouvée : {infos}"
-                                else:
-                                    log = f"[{plate}] Plaque non attribuée"
+    while plate != nextPlate(END):
+        infos = searchPlate(driver, plate)
 
-                                if SAVE:
-                                    with open_encoding("logs.txt", "a+", "utf-8") as f:
-                                        f.write(log + "\n")
+        if infos != -1:
+            log = f"[{plate}] Plaque trouvée : {infos}"
+        else:
+            log = f"[{plate}] Plaque non attribuée"
 
-                                print(log)
+        if SAVE:
+            with open_encoding("logs.txt", "a+", "utf-8") as f:
+                f.write(log + "\n")
+
+        plate = nextPlate(plate)
+
+        print(log)
