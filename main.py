@@ -13,7 +13,7 @@ from time import sleep
 START = "AB-123-CD"
 END   = "EF-456-GH"
 
-# Rechercher une marque
+# Rechercher une marque (laisser vide sinon)
 SEARCH = "suzuki"
 
 # Sauvegarder les résultats dans logs.txt
