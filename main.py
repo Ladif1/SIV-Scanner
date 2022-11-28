@@ -10,8 +10,11 @@ from time import sleep
 # ------------------ [SETTINGS] ------------------ #
 
 # Début/Fin
-START = "FF-123-AA"
-END   = "FF-124-AA"
+START = "AB-123-CD"
+END   = "EF-456-GH"
+
+# Rechercher une marque
+SEARCH = "suzuki"
 
 # Sauvegarder les résultats dans logs.txt
 SAVE = False
@@ -113,6 +116,7 @@ if __name__ == "__main__":
     openAndAcceptCookies(driver)
 
     logs = []
+    matches = []
     plate = START
 
     while plate != nextPlate(END):
@@ -120,6 +124,10 @@ if __name__ == "__main__":
 
         if infos != -1:
             log = f"[{plate}] Plaque attribuée : {infos}"
+
+            if SEARCH and SEARCH.lower() in infos.lower():
+                matches.append((plate, infos))
+
         else:
             log = f"[{plate}] Plaque non attribuée"
 
@@ -157,3 +165,14 @@ if __name__ == "__main__":
             print(f"\u2022  {round((v / count) * 100, 2)} %  {k} ({v})")
 
         print(f"\nTotal : {count} véhicules identifiés")
+
+    if SEARCH:
+        print("\n[Recherche]\n----------------------------------------\n")
+
+        if not matches:
+            print("Aucun résultat.")
+        else:
+            print(f"{len(matches)} résultats :\n")
+
+            for match in matches:
+                print(f"\u2022 [{match[0]}] {match[1]}")
