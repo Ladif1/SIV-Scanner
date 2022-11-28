@@ -1,11 +1,11 @@
-from string import ascii_uppercase as alpha
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from time import sleep
+from string import ascii_uppercase as alpha
 from codecs import open as open_encoding
+from time import sleep
 
 # ------------------- #
 
