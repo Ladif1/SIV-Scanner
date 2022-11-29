@@ -10,8 +10,8 @@ from time import sleep
 # ------------------ [SETTINGS] ------------------ #
 
 # Début/Fin
-START = "AB-123-CD"
-END   = "EF-456-GH"
+START = "WW-049-RA"
+END   = "WW-049-RZ"
 
 # Rechercher une marque (laisser vide sinon)
 SEARCH = "suzuki"
@@ -161,10 +161,13 @@ if __name__ == "__main__":
 
         sorted_stats = dict(reversed(sorted(stats.items(), key=lambda item: item[1])))
 
-        for k, v in sorted_stats.items():
-            print(f"\u2022  {round((v / count) * 100, 2)} %  {k} ({v})")
+        if sorted_stats:
+            for k, v in sorted_stats.items():
+                print(f"\u2022  {round((v / count) * 100, 2)} %  {k} ({v})")
 
-        print(f"\nTotal : {count} véhicules identifiés")
+            print("\n")
+
+        print(f"Total : {count} véhicules identifiés")
 
     if SEARCH:
         print("\n[Recherche]\n----------------------------------------\n")
