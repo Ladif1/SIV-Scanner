@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
@@ -7,14 +9,15 @@ from string import ascii_uppercase as alpha
 from codecs import open as open_encoding
 from time import sleep
 
+
 # ------------------ [SETTINGS] ------------------ #
 
 # Début/Fin
-START = "WW-049-RA"
-END   = "WW-049-RZ"
+START = "AA-000-AA"
+END   = "AA-000-AA"
 
 # Rechercher une marque (laisser vide sinon)
-SEARCH = "suzuki"
+SEARCH = ""
 
 # Sauvegarder les résultats dans logs.txt
 SAVE = False
@@ -111,8 +114,9 @@ if __name__ == "__main__":
         options.add_argument("headless")
         options.add_argument("window-size=1920x1080")
         options.add_argument("disable-gpu")
+        options.add_argument("--log-level=3")
 
-    driver = webdriver.Chrome("chromedriver", options=options)
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     openAndAcceptCookies(driver)
 
     logs = []
