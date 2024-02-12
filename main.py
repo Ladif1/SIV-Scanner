@@ -14,7 +14,7 @@ from time import sleep
 
 # Début/Fin
 START = "AA-000-AA"
-END   = "AA-000-AA"
+END = "ZZ-999-ZZ"
 
 # Rechercher une marque (laisser vide sinon)
 SEARCH = ""
@@ -37,12 +37,16 @@ TIMEOUT = 10
 def openAndAcceptCookies(d):
     d.get(URL)
     d.maximize_window()
-    WebDriverWait(d, TIMEOUT).until(EC.presence_of_element_located((By.ID, "acb-accept-all-button"))).click()
+    WebDriverWait(d, TIMEOUT).until(
+        EC.presence_of_element_located((By.ID, "acb-accept-all-button"))
+    ).click()
     sleep(1)
 
 
 def searchPlate(d, p):
-    WebDriverWait(d, TIMEOUT).until(EC.presence_of_element_located((By.CLASS_NAME, "p_immatriculation")))
+    WebDriverWait(d, TIMEOUT).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "p_immatriculation"))
+    )
 
     recherche = d.find_element(By.CLASS_NAME, "p_immatriculation")
     recherche.clear()
@@ -52,13 +56,17 @@ def searchPlate(d, p):
     WebDriverWait(d, TIMEOUT).until(
         EC.any_of(
             EC.presence_of_element_located((By.CLASS_NAME, "cible")),
-            EC.text_to_be_present_in_element((By.CLASS_NAME, "alert"), 'Nous n\'avons pas trouvé')
+            EC.text_to_be_present_in_element(
+                (By.CLASS_NAME, "alert"), "Nous n'avons pas trouvé"
+            ),
         )
     )
 
     if len(d.find_elements(By.CLASS_NAME, "cible")) > 0:
         modele = d.find_elements(By.CLASS_NAME, "cible")[0].text[22:]
-        d.execute_script("var e = document.getElementsByClassName('cible')[0]; e.parentNode.removeChild(e);")
+        d.execute_script(
+            "var e = document.getElementsByClassName('cible')[0]; e.parentNode.removeChild(e);"
+        )
 
         if not modele.startswith("."):
             return modele
@@ -87,20 +95,28 @@ def nextNumber(n):
 def nextPlate(p):
     p = list(p)
 
-    if p[8] != 'Z':
+    if p[8] != "Z":
         p[8] = nextLetter(p[8])
-    elif p[7] != 'Z':
-        p[7], p[8] = nextLetter(p[7]), 'A'
-    elif p[5] != '9':
-        p[5], p[7], p[8] = nextNumber(p[5]), 'A', 'A'
-    elif p[4] != '9':
-        p[4], p[5], p[7], p[8] = nextNumber(p[4]), '0', 'A', 'A'
-    elif p[3] != '9':
-        p[3], p[4], p[5], p[7], p[8] = nextNumber(p[3]), '0', '0', 'A', 'A'
-    elif p[1] != 'Z':
-        p[1], p[3], p[4], p[5], p[7], p[8] = nextLetter(p[1]), '0', '0', '0', 'A', 'A'
-    elif p[0] != 'Z':
-        p[0], p[1], p[3], p[4], p[5], p[7], p[8] = nextLetter(p[0]), 'A', '0', '0', '0', 'A', 'A'
+    elif p[7] != "Z":
+        p[7], p[8] = nextLetter(p[7]), "A"
+    elif p[5] != "9":
+        p[5], p[7], p[8] = nextNumber(p[5]), "A", "A"
+    elif p[4] != "9":
+        p[4], p[5], p[7], p[8] = nextNumber(p[4]), "0", "A", "A"
+    elif p[3] != "9":
+        p[3], p[4], p[5], p[7], p[8] = nextNumber(p[3]), "0", "0", "A", "A"
+    elif p[1] != "Z":
+        p[1], p[3], p[4], p[5], p[7], p[8] = nextLetter(p[1]), "0", "0", "0", "A", "A"
+    elif p[0] != "Z":
+        p[0], p[1], p[3], p[4], p[5], p[7], p[8] = (
+            nextLetter(p[0]),
+            "A",
+            "0",
+            "0",
+            "0",
+            "A",
+            "A",
+        )
 
     return "".join(p)
 
@@ -116,7 +132,9 @@ if __name__ == "__main__":
         options.add_argument("disable-gpu")
         options.add_argument("--log-level=3")
 
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(
+        service=ChromeService(ChromeDriverManager().install()), options=options
+    )
     openAndAcceptCookies(driver)
 
     logs = []
